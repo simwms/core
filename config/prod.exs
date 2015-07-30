@@ -50,7 +50,7 @@ config :logger, level: :info
 config :core, Core.Endpoint,
   secret_key_base: System.get_env("SECRET_KEY_BASE")
 
-# Configure your database
+# Configure your database, trivial change to trigger rebuild
 config :core, Core.Repo,
   adapter: Ecto.Adapters.Postgres,
   url: System.get_env("DATABASE_URL"),
