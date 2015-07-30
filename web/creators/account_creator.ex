@@ -2,7 +2,6 @@ defmodule Core.AccountCreator do
   alias __MODULE__
   alias Core.Account
   alias Core.Repo
-  alias Ecto.Changeset, as: C
   defstruct errors: [],
     success?: false,
     amazon: {:no, nil},
@@ -19,6 +18,7 @@ defmodule Core.AccountCreator do
   end
 
   def attempt_cleanup!(results) do
+    results
   end
 
   def setup_creator({user, params}) do
