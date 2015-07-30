@@ -13,11 +13,11 @@ defmodule Core.Router do
     plug :fetch_session
   end
 
-  # scope "/", Core do
-  #   pipe_through :browser # Use the default browser stack
+  scope "/", Core do
+    pipe_through :browser # Use the default browser stack
 
-  #   get "/", PageController, :index
-  # end
+    get "/", PageController, :index
+  end
 
   # Other scopes may use custom stacks.
   scope "/api", Core do
