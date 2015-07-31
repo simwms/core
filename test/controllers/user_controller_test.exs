@@ -5,7 +5,7 @@ defmodule Core.UserControllerTest do
   @valid_attrs %{
     email: "test@test.co",
     password: "some content",
-    remember_me: "true",
+    remember_me: true,
     username: "tester"}
   @invalid_attrs %{}
 

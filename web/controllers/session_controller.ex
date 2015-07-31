@@ -17,11 +17,11 @@ defmodule Core.SessionController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
-    session = conn |> Session.logout!(id)
+  def delete(conn, _) do
+    session = conn |> Session.logout!
     unless session.logged_in? do
       session.conn
-      |> render("show.json", session: session)
+      |> render("ok.json", %{})
     else
       session.conn
       |> put_status(:unprocessable_entity)

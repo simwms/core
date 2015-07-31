@@ -4,12 +4,23 @@ defmodule Core.Session do
   alias __MODULE__
   alias Core.Repo
   alias Core.User
-  defstruct id: nil, logged_in?: false, user: nil, errors: [], conn: nil
+  defstruct id: nil, logged_in?: false, user: nil, errors: [], conn: nil, remember_token: nil
 
   def current_user(conn) do
+    user_via_session(conn) || user_via_token(conn)
+  end
+
+  defp user_via_session(conn) do
     conn
     |> Plug.Conn.get_session(:current_user)
     |> find_user_by_id
+  end
+
+  defp user_via_token(conn) do
+    conn
+    |> Plug.Conn.get_req_header("remember_token")
+    |> List.first
+    |> find_user_by_token
   end
 
   def logged_in?(conn) do
@@ -28,7 +39,7 @@ defmodule Core.Session do
   def login!(conn, %{"remember_me" => remember}=params) do
     session = conn |> login!(remove_remember_me params)
 
-    if remember == "true" || remember == true do
+    if remember and session.logged_in? do
       session |> remember_me!
     else
       session
@@ -41,6 +52,7 @@ defmodule Core.Session do
         conn = conn |> Plug.Conn.put_session(:current_user, user.id)
         %Session{
           id: user.id,
+          remember_token: user.remember_token,
           logged_in?: true,
           user: user,
           conn: conn }
@@ -60,6 +72,7 @@ defmodule Core.Session do
       {:ok, user} -> 
         %Session{
           id: user.id,
+          remember_token: user.remember_token,
           logged_in?: true,
           user: user,
           conn: conn |> Plug.Conn.put_session(:current_user, user.id) }
@@ -78,9 +91,10 @@ defmodule Core.Session do
     if user = token |> find_user_by_token do
       %Session{
         id: user.id,
+        remember_token: user.remember_token,
         logged_in?: true,
         user: user,
-        conn: conn = conn |> Plug.Conn.put_session(:current_user, user.id) }
+        conn: conn |> Plug.Conn.put_session(:current_user, user.id) }
     else
       %Session{
         conn: conn,
@@ -100,20 +114,24 @@ defmodule Core.Session do
     }
   end
 
-  def remember_me!(%{user: user}=session) do
+  def update_remember_me_token!(user) do
     remember_params = %{"remember_token" => random_characters}
-    changeset = User.changeset(user, remember_params)
-    user = Repo.update! changeset
-
-    %{session | user: user}
+    user
+    |> User.changeset(remember_params)
+    |> Repo.update!
   end
 
-  def forget_me!(%{user: user}=session) do
-    remember_params = %{"remember_token" => nil}
-    changeset = User.changeset(user, remember_params)
-    user = Repo.update! changeset
+  def remember_me!(%{user: user}=session) do
+    user = update_remember_me_token!(user)
+    %{session | user: user, remember_token: user.remember_token }
+  end
 
-    %{session | user: user}
+  def forget_me!(nil), do: nil
+  def forget_me!(user) do
+    remember_params = %{"remember_token" => nil}
+    user
+    |> User.changeset(remember_params)
+    |> Repo.update! 
   end
 
   def random_characters do
@@ -133,7 +151,9 @@ defmodule Core.Session do
   end
 
   def logout!(conn) do
-    conn |> Plug.Conn.delete_session(:current_user)
+    conn |> current_user |> forget_me!
+    conn = conn |> Plug.Conn.delete_session(:current_user)
+    %Session{conn: conn}
   end
 
   def find_user_by_token(nil), do: nil

@@ -14,10 +14,10 @@ defmodule Core.AccountControllerTest do
   @bad_attrs %{}
 
   setup do
-    Core.User.changeset(%Core.User{}, @register_attrs) |> Repo.insert!
+    user = Core.User.changeset(%Core.User{}, @register_attrs) |> Repo.insert!
     conn = conn() 
     |> put_req_header("accept", "application/json")
-    {:ok, conn: conn}
+    {:ok, conn: conn, user: user}
   end
 
   test "it should forbid a bad user from getting in", %{conn: conn} do
@@ -38,6 +38,14 @@ defmodule Core.AccountControllerTest do
     assert response["account"]["user_id"]
     assert response["account"]["access_key_id"]
     assert response["account"]["secret_access_key"]
-    
+  end
+
+  test "it should let me access the index with the proper user token", %{conn: conn, user: user} do
+    %{remember_token: token } = user |> Core.Session.update_remember_me_token!
+    response = conn
+    |> put_req_header("remember_token", token)
+    |> get( account_path(conn, :index) )
+    |> json_response(200)
+    assert response["accounts"]
   end
 end

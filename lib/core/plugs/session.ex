@@ -5,7 +5,7 @@ defmodule Core.Plugs.Session do
   def init(options), do: options
 
   def call(conn, _opts) do
-    if conn |> logged_in? do
+    if (conn |> logged_in?) do
       conn
     else
       conn

@@ -22,7 +22,11 @@ defmodule Core.Router do
   # Other scopes may use custom stacks.
   scope "/api", Core do
     pipe_through :api
-    resources "/sessions", SessionController, only: [:create, :delete]
+    # post "/sessions", SessionController, :create
+    # delete "/sessions", SessionController, :delete
+    resources "/sessions", SessionController, only: [:create, :delete], singleton: true
+    resources "/sessions", SessionController, only: [:delete]
+    
     resources "/users", UserController, only: [:create]
     resources "/accounts", AccountController, only: [:create, :delete, :update, :index, :show]
   end
