@@ -32,5 +32,7 @@ defmodule Core.Endpoint do
     key: "_core_key",
     signing_salt: "oxs65Ixa"
 
+  plug CORSPlug, [origin: "*"]
+
   plug :router, Core.Router
 end

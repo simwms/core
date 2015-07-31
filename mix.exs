@@ -18,7 +18,8 @@ defmodule Core.Mixfile do
   def application do
     [mod: {Core, []},
      applications: [:phoenix, :phoenix_html, :cowboy, :logger,
-                    :phoenix_ecto, :postgrex, :comeonin, :fox]]
+                    :phoenix_ecto, :postgrex, :comeonin, :fox,
+                    :cors_plug]]
   end
 
   # Specifies which paths to compile per environment
@@ -37,6 +38,7 @@ defmodule Core.Mixfile do
      {:phoenix_live_reload, "~> 0.4", only: :dev},
      {:cowboy, "~> 1.0"},
      {:comeonin, "~> 1.0"},
-     {:fox, "~> 0.0.3"}]
+     {:fox, "~> 0.0.3"},
+     {:cors_plug, "~> 0.1.3"}]
   end
 end
