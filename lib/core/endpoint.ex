@@ -32,7 +32,11 @@ defmodule Core.Endpoint do
     key: "_core_key",
     signing_salt: "oxs65Ixa"
 
-  plug CORSPlug, [origin: "*"]
+  plug CORSPlug, 
+    headers: ["Authorization", "Content-Type", "Accept", "Origin",
+              "User-Agent", "DNT","Cache-Control", "X-Mx-ReqToken",
+              "Keep-Alive", "X-Requested-With", "If-Modified-Since",
+              "X-CSRF-Token", "remember_token"]
 
   plug :router, Core.Router
 end
