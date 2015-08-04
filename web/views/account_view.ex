@@ -22,6 +22,8 @@ defmodule Core.AccountView do
       host: account.host,
       namespace: account.namespace,
       service_plan: account.service_plan,
+      uiux_host: account.uiux_host,
+      config_host: account.config_host,
       user_id: account.user_id,
       inserted_at: account.inserted_at}
   end

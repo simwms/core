@@ -9,13 +9,15 @@ defmodule Core.Account do
     field :host, :string
     field :namespace, :string
     field :service_plan, :string
+    field :uiux_host, :string
+    field :config_host, :string
     belongs_to :user, Core.User
 
     timestamps
   end
 
   @required_fields ~w(company_name access_key_id secret_access_key timezone host namespace user_id)
-  @optional_fields ~w(service_plan)
+  @optional_fields ~w(service_plan uiux_host config_host)
 
   @doc """
   Creates a changeset based on the `model` and `params`.
