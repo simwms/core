@@ -10,27 +10,18 @@ defmodule Core.Repo.Migrations.CreateUser do
       add :remember_token, :string
       add :forget_at, :datetime
       add :remembered_at, :datetime
-
+      add :stripe_customer_id, :string
+      
       timestamps
     end
     create index(:users, [:email], unique: true)
     create index(:users, [:username], unique: true)
     create index(:users, [:remember_token])
     create index(:users, [:recovery_hash], unique: true)
-    seed_user
   end
 
   def down do
     drop table(:users)
   end
 
-  @seed_user %{
-    "email" => "test@test.test",
-    "username" => "stage-test",
-    "password" => "1234567" }
-  defp seed_user do
-    %Core.User{}
-    |> Core.User.changeset(@seed_user)
-    |> Core.Repo.insert!
-  end
 end

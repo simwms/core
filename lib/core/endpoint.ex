@@ -38,5 +38,5 @@ defmodule Core.Endpoint do
               "Keep-Alive", "X-Requested-With", "If-Modified-Since",
               "X-CSRF-Token", "remember_token"]
 
-  plug :router, Core.Router
+  plug Core.Router
 end

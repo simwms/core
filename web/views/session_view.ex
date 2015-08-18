@@ -5,7 +5,7 @@ defmodule Core.SessionView do
   def render("ok.json", _), do: %{}
 
   def render("show.json", %{session: session}) do
-    %{session: render_one(session, "session.json")}
+    %{session: render_one(session, __MODULE__, "session.json")}
   end
 
   def render("session.json", %{session: session}) do
@@ -20,6 +20,6 @@ defmodule Core.SessionView do
 
   def render_user(%{user: nil}), do: nil
   def render_user(%{user: user}) do
-    user |> render_one("user.json")
+    user |> render_one(Core.UserView, "user.json")
   end
 end

@@ -38,6 +38,7 @@ defmodule Core.AccountControllerTest do
     assert response["account"]["user_id"]
     assert response["account"]["access_key_id"]
     assert response["account"]["secret_access_key"]
+    assert response["account"]["service_plan_id"] == 2
   end
 
   test "it should let me access the index with the proper user token", %{conn: conn, user: user} do

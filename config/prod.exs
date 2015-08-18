@@ -54,4 +54,4 @@ config :core, Core.Endpoint,
 config :core, Core.Repo,
   adapter: Ecto.Adapters.Postgres,
   url: System.get_env("DATABASE_URL"),
-  size: 20 # The amount of database connections in the pool
+  pool_size: 20 # The amount of database connections in the pool

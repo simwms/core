@@ -4,14 +4,16 @@ defmodule Core.AccountController do
   alias Core.Account
   alias Core.AccountCreator
   alias Core.Session
+  alias Core.AccountQuery
   plug :scrub_params, "account" when action in [:create, :update]
   plug Core.Plugs.Session, :reject_not_logged_in_users when action in [:create, :index]
 
   def index(conn, params) do
     current_user = conn |> Session.current_user
     accounts = {current_user, params}
-    |> Core.AccountQuery.index
+    |> AccountQuery.index
     |> Repo.all
+    |> Repo.preload(AccountQuery.preload_fields)
     render(conn, "index.json", accounts: accounts)
   end
 
@@ -20,18 +22,16 @@ defmodule Core.AccountController do
     createset = {current_user, account_params} |> AccountCreator.attempt_build!
 
     if createset.success? do
-      {:ok, account} = createset.database
-      render(conn, "show.json", account: account)
+      render(conn, "show.json", account: createset.account)
     else
-      {:error, changeset} = createset.database
       conn
       |> put_status(:unprocessable_entity)
-      |> render(Core.ChangesetView, "error.json", changeset: changeset)
+      |> render(Core.ChangesetView, "error.json", changeset: createset.changeset)
     end
   end
 
   def show(conn, %{"id" => id}) do
-    account = Repo.get!(Account, id)
+    account = Repo.get!(Account, id) |> Repo.preload(AccountQuery.preload_fields)
     render conn, "show.json", account: account
   end
 
@@ -40,7 +40,7 @@ defmodule Core.AccountController do
     changeset = Account.changeset(account, account_params)
 
     if changeset.valid? do
-      account = Repo.update!(changeset)
+      account = Repo.update!(changeset) |> Repo.preload(AccountQuery.preload_fields)
       render(conn, "show.json", account: account)
     else
       conn

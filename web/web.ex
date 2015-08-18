@@ -19,6 +19,7 @@ defmodule Core.Web do
   def model do
     quote do
       use Ecto.Model
+      alias Core.Repo
     end
   end
 

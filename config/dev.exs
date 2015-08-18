@@ -32,4 +32,8 @@ config :core, Core.Repo,
   username: "root",
   password: "",
   database: "core_dev",
-  size: 10 # The amount of database connections in the pool
+  pool_size: 10 # The amount of database connections in the pool
+
+# Stripe configurations
+config :stripe,
+  secret_key: "sk_test_GINswumlSKmkYRJ3lnno7Cqx"

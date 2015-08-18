@@ -2,12 +2,16 @@ defmodule Core.AccountCreator do
   alias __MODULE__
   alias Core.Account
   alias Core.Repo
+  alias Core.PaymentSubscription
+  alias Core.AccountQuery
   defstruct errors: [],
     success?: false,
     amazon: {:no, nil},
     heroku: {:no, nil},
-    database: {:no, nil},
+    account: nil,
+    changeset: nil,
     user: %{id: nil},
+    payment_subscription: %{id: nil},
     params: %{}
   def attempt_build!({user, params}) do
     {user, params}
@@ -15,6 +19,7 @@ defmodule Core.AccountCreator do
     |> request_amazon_access_keys
     |> spinup_heroku_instance
     |> persist_to_database
+    |> setup_payment_subscription
   end
 
   def attempt_cleanup!(results) do
@@ -45,9 +50,16 @@ defmodule Core.AccountCreator do
 
     if changeset.valid? do
       account = Repo.insert!(changeset)
-      %{creator | database: {:ok, account}, success?: true }
+      %{creator | account: account, success?: true }
     else
-      %{creator | database: {:error, changeset} }
+      %{creator | changeset: changeset }
     end
+  end
+
+  def setup_payment_subscription(%{success?: false}=creator), do: creator
+  def setup_payment_subscription(%{account: account}=creator) do
+    ps = account |> PaymentSubscription.free_trial
+    account = account |> Repo.preload(AccountQuery.preload_fields)
+    %{creator | payment_subscription: ps, account: account }
   end
 end

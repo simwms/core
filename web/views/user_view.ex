@@ -3,11 +3,11 @@ defmodule Core.UserView do
   import Fox.DictExt, only: [reject_blank_keys: 1]
 
   def render("index.json", %{users: users}) do
-    %{user: render_many(users, "user.json")}
+    %{user: render_many(users, __MODULE__, "user.json")}
   end
 
   def render("show.json", %{user: user}) do
-    %{user: render_one(user, "user.json")}
+    %{user: render_one(user, __MODULE__, "user.json")}
   end
 
   def render("user.json", %{user: user}) do
