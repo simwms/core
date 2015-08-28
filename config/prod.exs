@@ -55,3 +55,7 @@ config :core, Core.Repo,
   adapter: Ecto.Adapters.Postgres,
   url: System.get_env("DATABASE_URL"),
   pool_size: 20 # The amount of database connections in the pool
+
+config :simwms,
+  url: "https://whatever.herokuapp.com",
+  master_key: System.get_env("SIMWMS_MASTER_KEY")

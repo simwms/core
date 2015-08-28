@@ -36,9 +36,8 @@ defmodule Core.Repo.Migrations.SetupSeed do
       "company_name" => "Test Stage Co",
       "access_key_id" => "AKIAINYEM24JX5TX33LA",
       "secret_access_key" => "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",
-      "timezone" => "American/Los_Angeles",
+      "timezone" => "America/Los_Angeles",
       "host" => "https://safe-forest-2497.herokuapp.com",
-      "namespace" => "apiv2",
       "uiux_host" => "https://simwms.github.io/uiux",
       "config_host" => "https://simwms.github.io/config" 
     },
@@ -47,9 +46,8 @@ defmodule Core.Repo.Migrations.SetupSeed do
       "company_name" => "Test Local Co",
       "access_key_id" => "AKIAINYEM24JX5TX33LA",
       "secret_access_key" => "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",
-      "timezone" => "American/New_York",
+      "timezone" => "America/New_York",
       "host" => "http://localhost:4000",
-      "namespace" => "apiv2",
       "uiux_host" => "https://simwms.github.io/uiux",
       "config_host" => "https://simwms.github.io/config" 
     }

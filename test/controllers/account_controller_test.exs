@@ -36,9 +36,15 @@ defmodule Core.AccountControllerTest do
     assert response["account"]["company_name"] == @valid_attrs["company_name"]
     assert response["account"]["timezone"] == @valid_attrs["timezone"]
     assert response["account"]["user_id"]
+    assert response["account"]["service_plan_id"] == 2
+    assert response["account"]["uiux_host"]
+    assert response["account"]["config_host"]
     assert response["account"]["access_key_id"]
     assert response["account"]["secret_access_key"]
-    assert response["account"]["service_plan_id"] == 2
+    assert response["account"]["host"]
+    assert response["account"]["namespace"]
+    assert response["account"]["simwms_account_key"]
+    assert response["account"]["is_properly_setup"] == true
   end
 
   test "it should let me access the index with the proper user token", %{conn: conn, user: user} do

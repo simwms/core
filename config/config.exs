@@ -19,6 +19,18 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
+config :gateway, Simwms,
+  url: "http://localhost:4000",
+  master_key: "koudou ga yamu made soba ni iru nante tagaeru yakusoku ha sezu tada anata to itai",
+  uiux_host: "https://simwms.github.io",
+  config_host: "https://simwms.github.io/config",
+  host: "https://evening-springs-7575.herokuapp.com",
+  namespace: "apiv3"
+
+config :gateway, Amazon,
+  access_key_id: "AKIAINYEM24JX5TX33LA",
+  secret_access_key: "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"
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"

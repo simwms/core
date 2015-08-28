@@ -38,9 +38,10 @@ defmodule Core.Mixfile do
      {:phoenix_live_reload, "~> 0.6", only: :dev},
      {:cowboy, "~> 1.0"},
      {:comeonin, "~> 1.1"},
-     {:fox, "~> 0.0.7"},
+     {:fox, "~> 0.1"},
      {:cors_plug, "~> 0.1.3"},
-     {:stripex, "~>0.0.4"}]
+     {:stripex, "~>0.0.5"},
+     {:pipe, "~> 0.0.2"},
+     {:gateway, "~>0.0.2"}]
   end
 end
-     # {:stripex, github: "foxnewsnetwork/stripex"}]

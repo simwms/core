@@ -19,14 +19,13 @@ defmodule Core.AccountController do
 
   def create(conn, %{"account" => account_params}) do
     current_user = conn |> Session.current_user
-    createset = {current_user, account_params} |> AccountCreator.attempt_build!
-
-    if createset.success? do
-      render(conn, "show.json", account: createset.account)
-    else
-      conn
-      |> put_status(:unprocessable_entity)
-      |> render(Core.ChangesetView, "error.json", changeset: createset.changeset)
+    case {current_user, account_params} |> AccountCreator.attempt_build! do
+      {:ok, creator} ->
+        render(conn, "show.json", account: creator.account)
+      {:error, creator} ->
+        conn
+        |> put_status(:unprocessable_entity)
+        |> render(Core.ChangesetView, "error.json", changeset: creator.changeset)
     end
   end
 

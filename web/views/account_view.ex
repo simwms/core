@@ -24,8 +24,10 @@ defmodule Core.AccountView do
       namespace: account.namespace,
       service_plan_id: plan_id,
       payment_subscription_id: account.payment_subscription.id,
+      is_properly_setup: account.is_properly_setup,
       uiux_host: account.uiux_host,
       config_host: account.config_host,
+      simwms_account_key: account.simwms_account_key,
       user_id: account.user_id,
       inserted_at: account.inserted_at}
   end

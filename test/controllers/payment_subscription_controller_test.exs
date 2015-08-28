@@ -26,7 +26,7 @@ defmodule Core.PaymentSubscriptionControllerTest do
 
   setup do
     user = Core.User.changeset(%Core.User{}, @register_attrs) |> Repo.insert!
-    creator = {user, @account_attrs} |> Core.AccountCreator.attempt_build!
+    {:ok, creator} = {user, @account_attrs} |> Core.AccountCreator.attempt_build!
     conn = conn() 
     |> put_req_header("accept", "application/json")
     |> post( session_path(conn, :create), session: @login_attrs )

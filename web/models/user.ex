@@ -29,8 +29,8 @@ defmodule Core.User do
     |> cast(params, @required_fields, @optional_fields)
     |> downcase_email
     |> validate_format(:email, ~r/@/)
-    |> validate_unique(:email, on: Core.Repo, downcase: true)
-    |> validate_unique(:username, on: Core.Repo, downcase: true)
+    |> unique_constraint(:email, on: Core.Repo, downcase: true)
+    |> unique_constraint(:username, on: Core.Repo, downcase: true)
   end
 
   def process_params(%{"password" => _}=params) do

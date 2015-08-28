@@ -12,6 +12,8 @@ defmodule Core.Repo.Migrations.CreateAccount do
       add :user_id, :integer
       add :uiux_host, :string
       add :config_host, :string
+      add :simwms_account_key, :string
+      add :is_properly_setup, :boolean, null: false, default: false
 
       timestamps
     end
