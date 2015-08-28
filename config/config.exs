@@ -22,9 +22,8 @@ config :logger, :console,
 config :gateway, Simwms,
   url: "http://localhost:4000",
   master_key: "koudou ga yamu made soba ni iru nante tagaeru yakusoku ha sezu tada anata to itai",
-  uiux_host: "https://simwms.github.io",
+  uiux_host: "https://simwms.github.io/uiux",
   config_host: "https://simwms.github.io/config",
-  host: "https://evening-springs-7575.herokuapp.com",
   namespace: "apiv3"
 
 config :gateway, Amazon,

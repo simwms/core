@@ -7,7 +7,7 @@ defmodule Core.Account do
     field :access_key_id, :string
     field :secret_access_key, :string
     field :timezone, :string
-    field :host, :string, default: @simwms_defaults[:host]
+    field :host, :string, default: @simwms_defaults[:url]
     field :namespace, :string, default: @simwms_defaults[:namespace]
     field :uiux_host, :string, default: @simwms_defaults[:uiux_host]
     field :config_host, :string, default: @simwms_defaults[:config_host]

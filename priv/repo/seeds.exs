@@ -1,48 +1,44 @@
-defmodule Core.Repo.Migrations.SetupSeed do
-  use Ecto.Migration
-
-  def up do
-    seed_user
-    seed_accounts
-    seed_service_plans
-    seed_payment_subscriptions
-  end
-
-  def down do
-    unseed_user
-    unseed_accounts
-    unseed_service_plans
-    unseed_payment_subscriptions
+# Script for populating the database. You can run it as:
+#
+#     mix run priv/repo/seeds.exs
+#
+# Inside the script, you can read and write to any of your
+# repositories directly:
+#
+#     Core.Repo.insert!(%SomeModel{})
+#
+# We recommend using the bang functions (`insert!`, `update!`
+# and so on) as they will fail if something goes wrong.
+defmodule Seeds do
+  def plant do
+    user = seed_user
+    [stage_account, local_account] = user |> seed_accounts
+    [plan|_] = seed_plans
+    %{account: stage_account, plan: plan} |> seed_payment_subscription
+    %{account: local_account, plan: plan} |> seed_payment_subscription
   end
 
   @seed_user %{
-    "email" => "test@test.test",
-    "username" => "stage-test",
-    "password" => "1234567" }
+      "email" => "test@test.test",
+      "username" => "stage-test",
+      "password" => "1234567" }
   defp seed_user do
     %Core.User{}
     |> Core.User.changeset(@seed_user)
     |> Core.Repo.insert!
   end
 
-  defp unseed_user do
-    Core.User
-    |> Core.Repo.delete_all
-  end
-
   @seed_accounts [
     %{
-      "user_id" => 1,
       "company_name" => "Test Stage Co",
       "access_key_id" => "AKIAINYEM24JX5TX33LA",
       "secret_access_key" => "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",
       "timezone" => "America/Los_Angeles",
-      "host" => "https://safe-forest-2497.herokuapp.com",
+      "host" => "https://evening-springs-7575.herokuapp.com",
       "uiux_host" => "https://simwms.github.io/uiux",
       "config_host" => "https://simwms.github.io/config" 
     },
     %{
-      "user_id" => 1,
       "company_name" => "Test Local Co",
       "access_key_id" => "AKIAINYEM24JX5TX33LA",
       "secret_access_key" => "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",
@@ -52,16 +48,13 @@ defmodule Core.Repo.Migrations.SetupSeed do
       "config_host" => "https://simwms.github.io/config" 
     }
   ]
-  defp seed_accounts do
+  defp seed_accounts(user) do
     @seed_accounts
     |> Enum.map(&seed_account/1)
   end
-  defp unseed_accounts do
-    Core.Account
-    |> Core.Repo.delete_all
-  end
-  defp seed_account(seed) do
-    %Core.Account{}
+  defp seed_account(user, seed) do
+    user
+    |> Ecto.Model.build(:accounts)
     |> Core.Account.changeset(seed)
     |> Core.Repo.insert!
   end
@@ -119,39 +112,17 @@ defmodule Core.Repo.Migrations.SetupSeed do
     @seed_plans
     |> Enum.map(&seed_service_plan/1)
   end
-  defp unseed_service_plans do
-    Core.ServicePlan
-    |> Core.Repo.delete_all
-  end
   defp seed_service_plan(seed) do
     %Core.ServicePlan{}
     |> Core.ServicePlan.changeset(seed)
     |> Core.Repo.insert!
   end
 
-  @subscriptions [
-    %{
-      "service_plan_id" => 1,
-      "account_id" => 1,
-      "user_id" => 1
-    },
-    %{
-      "service_plan_id" => 1,
-      "account_id" => 2,
-      "user_id" => 1
-    }
-  ]
-  defp unseed_payment_subscriptions do
-    Core.PaymentSubscription
-    |> Core.Repo.delete_all
-  end
-  defp seed_payment_subscriptions do
-    @subscriptions
-    |> Enum.map(&seed_payment_subscription/1)
-  end
-  defp seed_payment_subscription(seed) do
+  defp seed_payment_subscription(%{account: account, plan: plan}) do
+    seed = %{account_id: account.id, service_plan_id: plan.id}
     %Core.PaymentSubscription{}
     |> Core.PaymentSubscription.changeset(seed)
     |> Core.Repo.insert!
   end
 end
+Seeds.plant
