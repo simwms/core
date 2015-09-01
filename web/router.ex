@@ -29,6 +29,6 @@ defmodule Core.Router do
     resources "/service_plans", ServicePlanController, only: [:index, :show]
     resources "/users", UserController, only: [:create]
     resources "/accounts", AccountController, only: [:create, :delete, :update, :index, :show]
-    resources "/payment_subscriptions", PaymentSubscriptionController, only: [:update, :delete]
+    resources "/payment_subscriptions", PaymentSubscriptionController, only: [:update, :delete, :show]
   end
 end

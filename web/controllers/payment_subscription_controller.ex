@@ -6,6 +6,11 @@ defmodule Core.PaymentSubscriptionController do
   plug :scrub_params, "payment_subscription" when action in [:update]
   plug Core.Plugs.Session, :reject_not_logged_in_users when action in [:delete, :update]
 
+  def show(conn, %{"id" => id}) do
+    subscription = PaymentSubscription |> Repo.get!(id) |> Repo.preload([:service_plan, account: :user])
+    render(conn, "show.json", payment_subscription: subscription)
+  end
+
   def delete(conn, %{"id" => id}) do
     subscription = PaymentSubscription |> Repo.get!(id)
     |> reset_to_free_trial!
