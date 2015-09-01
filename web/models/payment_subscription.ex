@@ -64,12 +64,12 @@ defmodule Core.PaymentSubscription do
     params = subscription |> make_stripe_params(source)
     case subscription.stripe_subscription_id do
       nil ->
-        stripe_subscription = cus_id |> Stripex.Subscriptions.create(params)
+        {:ok, stripe_subscription} = cus_id |> Stripex.Subscriptions.create(params)
         subscription
         |> changeset(%{"stripe_subscription_id" => stripe_subscription.id})
         |> Repo.update!
       id ->
-        {cus_id, id} |> Stripex.Subscriptions.update(params)
+        {:ok, _} = {cus_id, id} |> Stripex.Subscriptions.update(params)
         subscription
     end
   end

@@ -50,12 +50,12 @@ defmodule Core.PaymentSubscriptionControllerTest do
     %{stripe_subscription_id: id} = Repo.get!(Core.PaymentSubscription, subscription.id)
     assert cus_id
     assert id
-    stripe_subscription = {cus_id, id} |> Stripex.Subscriptions.retrieve
+    {:ok, stripe_subscription} = {cus_id, id} |> Stripex.Subscriptions.retrieve
     assert stripe_subscription
     assert stripe_subscription.id == id
     assert stripe_subscription.plan["id"] == service_plan.stripe_plan_id
 
-    subscriptions = cus_id |> Stripex.Subscriptions.all
+    {:ok, subscriptions} = cus_id |> Stripex.Subscriptions.all
     assert Enum.count(subscriptions) == 1
   end
 
@@ -68,7 +68,7 @@ defmodule Core.PaymentSubscriptionControllerTest do
     assert result["service_plan_id"] == free_trial.id
 
     %{stripe_customer_id: cus_id} = Repo.get!(Core.User, user.id)
-    subscriptions = cus_id |> Stripex.Subscriptions.all
+    {:ok, subscriptions} = cus_id |> Stripex.Subscriptions.all
     assert Enum.count(subscriptions) == 0
   end
 end

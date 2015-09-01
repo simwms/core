@@ -17,7 +17,3 @@ config :core, Core.Repo,
   database: "core_test",
   pool: Ecto.Adapters.SQL.Sandbox, # Use a sandbox for transactional testing
   pool_size: 1
-
-# configure stripe
-config :stripe,
-  secret_key: "sk_test_GINswumlSKmkYRJ3lnno7Cqx"

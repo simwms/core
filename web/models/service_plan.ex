@@ -65,7 +65,7 @@ defmodule Core.ServicePlan do
   end
 
   defp initialize_stripe(service_plan) do
-    stripe_plan = find_or_create_stripe_plan service_plan
+    {:ok, stripe_plan} = find_or_create_stripe_plan service_plan
 
     service_plan
     |> changeset(%{"stripe_plan_id" => stripe_plan.id})
@@ -74,14 +74,14 @@ defmodule Core.ServicePlan do
 
   defp find_or_create_stripe_plan(service_plan) do
     case service_plan.permalink |> Stripex.Plans.retrieve do
-      nil -> 
+      {:error, %{status_code: 404}} -> 
         Stripex.Plans.create id: service_plan.permalink,
           amount: service_plan.monthly_price,
           currency: "usd",
           name: service_plan.presentation,
           interval: "month",
           statement_descriptor: "simwms cloud service"
-      plan -> plan
+      {:ok, plan} -> {:ok, plan}
     end
   end
 

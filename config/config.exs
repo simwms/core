@@ -30,6 +30,10 @@ config :gateway, Amazon,
   access_key_id: "AKIAINYEM24JX5TX33LA",
   secret_access_key: "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"
 
+config :gateway, Stripex,
+  url: "https://api.stripe.com",
+  secret_key: "Bearer sk_test_GINswumlSKmkYRJ3lnno7Cqx"
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"

@@ -40,8 +40,8 @@ defmodule Core.Mixfile do
      {:comeonin, "~> 1.1"},
      {:fox, "~> 0.1"},
      {:cors_plug, "~> 0.1.3"},
-     {:stripex, "~>0.0.5"},
+     {:stripex, "~>0.1"},
      {:pipe, "~> 0.0.2"},
-     {:gateway, "~>0.0.2"}]
+     {:gateway, "~>0.0.4"}]
   end
 end

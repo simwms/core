@@ -63,7 +63,7 @@ defmodule Core.User do
   end
 
   defp initialize_stripe(user) do
-    customer = create_stripe_customer user
+    {:ok, customer} = create_stripe_customer user
     user
     |> changeset(%{"stripe_customer_id" => customer.id})
     |> Repo.update!
