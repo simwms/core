@@ -14,7 +14,7 @@ defmodule Core.AccountView do
   end
 
   def ember_attributes(account) do
-    plan_id = account.payment_subscription.service_plan_id
+    payment_subscription = Core.Account.ensure_payment_subscription account
     %{id: account.id,
       company_name: account.company_name,
       access_key_id: account.access_key_id,
@@ -22,8 +22,8 @@ defmodule Core.AccountView do
       timezone: account.timezone,
       host: account.host,
       namespace: account.namespace,
-      service_plan_id: plan_id,
-      payment_subscription_id: account.payment_subscription.id,
+      service_plan_id: payment_subscription.service_plan_id,
+      payment_subscription_id: payment_subscription.id,
       is_properly_setup: account.is_properly_setup,
       uiux_host: account.uiux_host,
       config_host: account.config_host,

@@ -44,6 +44,13 @@ defmodule Core.Account do
     |> cast(params, @required_fields, @optional_fields)
   end
 
+  def ensure_payment_subscription(account) do
+    case account.payment_subscription do
+      nil -> account |> Core.PaymentSubscription.free_trial
+      payment_subscription when not is_nil(payment_subscription) -> payment_subscription
+    end
+  end
+
   def synchronize_stripe(account) do
     account = account |> Repo.preload(:user)
     account.user |> Core.User.synchronize_stripe
