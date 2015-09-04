@@ -20,7 +20,7 @@ defmodule Core.AccountController do
     changeset = conn 
     |> Session.current_user
     |> build(:accounts)
-    |> Account.changeset(account_params)
+    |> Account.createset(account_params)
 
     if changeset.valid? do
       account = changeset |> Repo.insert!

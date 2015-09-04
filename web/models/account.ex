@@ -4,9 +4,9 @@ defmodule Core.Account do
   
   schema "accounts" do
     field :company_name, :string
+    field :timezone, :string
     field :access_key_id, :string
     field :secret_access_key, :string
-    field :timezone, :string
     field :host, :string, default: @simwms_defaults[:url]
     field :namespace, :string, default: @simwms_defaults[:namespace]
     field :uiux_host, :string, default: @simwms_defaults[:uiux_host]
@@ -33,7 +33,10 @@ defmodule Core.Account do
     simwms_account_key
     is_properly_setup
   )
-
+  
+  def createset(model, params\\:empty) do
+    model |> cast(params, @required_fields)
+  end
   @doc """
   Creates a changeset based on the `model` and `params`.
 

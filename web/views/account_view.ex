@@ -35,7 +35,8 @@ defmodule Core.AccountView do
       uiux_host: account.uiux_host,
       config_host: account.config_host,
       inserted_at: account.inserted_at,
-      is_properly_setup: account.is_properly_setup
+      is_properly_setup: account.is_properly_setup,
+      setup_attempts: account.setup_attempts
     }
   end
 
