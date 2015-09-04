@@ -1,7 +1,7 @@
 defmodule Core.Account do
   use Core.Web, :model
   @simwms_defaults Application.get_env(:gateway, Simwms)
-
+  
   schema "accounts" do
     field :company_name, :string
     field :access_key_id, :string
@@ -13,6 +13,7 @@ defmodule Core.Account do
     field :config_host, :string, default: @simwms_defaults[:config_host]
     field :simwms_account_key, :string
     field :is_properly_setup, :boolean, default: false
+    field :setup_attempts, :integer, default: 0
     belongs_to :user, Core.User
     has_one :stripe_customer_id, through: [:user, :stripe_customer_id]
     has_one :payment_subscription, Core.PaymentSubscription
@@ -42,6 +43,22 @@ defmodule Core.Account do
   def changeset(model, params \\ :empty) do
     model
     |> cast(params, @required_fields, @optional_fields)
+  end
+
+  def get_service_plan(%{service_plan: %Core.ServicePlan{}=plan}), do: plan
+  def get_service_plan(account) do
+    account |> assoc(:service_plan) |> Repo.one
+  end
+
+  def get_user(%{user: %Core.User{}=user}), do: user
+  def get_user(account) do
+    account |> assoc(:user) |> Repo.one
+  end 
+
+  def increment_attempt!(%{setup_attempts: n}=account) do
+    account
+    |> change(setup_attempts: n + 1)
+    |> Repo.update!
   end
 
   def ensure_payment_subscription(account) do

@@ -1,6 +1,6 @@
 defmodule Core.PaymentSubscriptionControllerTest do
   use Core.ConnCase
-
+  alias Core.Account
   @register_attrs %{
     username: "tester",
     email: "test@test.co",
@@ -26,15 +26,20 @@ defmodule Core.PaymentSubscriptionControllerTest do
 
   setup do
     user = Core.User.changeset(%Core.User{}, @register_attrs) |> Repo.insert!
-    {:ok, creator} = {user, @account_attrs} |> Core.AccountCreator.attempt_build!
+    account = user 
+    |> build(:accounts) 
+    |> Account.changeset(@account_attrs) 
+    |> Repo.insert!
+    |> Core.AccountSynchronizer.synchronize!
+    
     conn = conn() 
     |> put_req_header("accept", "application/json")
     |> post( session_path(conn, :create), session: @login_attrs )
-    {:ok, conn: conn, user: user, account: creator.account}
+    {:ok, conn: conn, user: user, account: account}
   end
 
   test "it should allow me to update my subscription", %{conn: conn, account: account, user: user} do
-    subscription = account.payment_subscription
+    subscription = account |> assoc(:payment_subscription) |> Repo.one!
     response = conn
     |> put( payment_subscription_path(conn, :update, subscription), payment_subscription: @payment_attrs)
     |> json_response(200)
@@ -61,7 +66,7 @@ defmodule Core.PaymentSubscriptionControllerTest do
 
   test "it should allow me to delete subscription", %{conn: conn, account: account, user: user} do
     free_trial = Core.ServicePlan.free_trial
-    subscription = account.payment_subscription
+    subscription = account |> assoc(:payment_subscription) |> Repo.one!
     %{"payment_subscription" => result} = conn
     |> delete( payment_subscription_path(conn, :delete, subscription), id: subscription.id)
     |> json_response(200)

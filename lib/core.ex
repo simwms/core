@@ -13,6 +13,8 @@ defmodule Core do
       worker(Core.Repo, []),
       # Here you could define other workers and supervisors as children
       # worker(Core.Worker, [arg1, arg2, arg3]),
+
+      supervisor(Accver.JobSupervisor, [])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html

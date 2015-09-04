@@ -2,7 +2,6 @@ defmodule Core.AccountController do
   use Core.Web, :controller
 
   alias Core.Account
-  alias Core.AccountCreator
   alias Core.Session
   alias Core.AccountQuery
   plug :scrub_params, "account" when action in [:create, :update]
@@ -18,14 +17,20 @@ defmodule Core.AccountController do
   end
 
   def create(conn, %{"account" => account_params}) do
-    current_user = conn |> Session.current_user
-    case {current_user, account_params} |> AccountCreator.attempt_build! do
-      {:ok, creator} ->
-        render(conn, "show.json", account: creator.account)
-      {:error, creator} ->
-        conn
-        |> put_status(:unprocessable_entity)
-        |> render(Core.ChangesetView, "error.json", changeset: creator.changeset)
+    changeset = conn 
+    |> Session.current_user
+    |> build(:accounts)
+    |> Account.changeset(account_params)
+
+    if changeset.valid? do
+      account = changeset |> Repo.insert!
+      account |> Accver.synchronize
+      conn
+      |> render("show.json", account: account)
+    else
+      conn
+      |> put_status(:unprocessable_entity)
+      |> render(Core.ChangesetView, "error.json", changeset: changeset)
     end
   end
 
