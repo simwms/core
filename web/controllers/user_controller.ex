@@ -8,13 +8,15 @@ defmodule Core.UserController do
 
   def create(conn, %{"user" => user_params}) do
     changeset = User.changeset(%User{}, user_params)
-    if changeset.valid? do
-      user = Repo.insert!(changeset)
-      render(conn, "show.json", user: user)
-    else
-      conn
-      |> put_status(:unprocessable_entity)
-      |> render(Core.ChangesetView, "error.json", changeset: changeset)
+    case changeset |> Repo.insert do
+      {:ok, user} ->
+        conn
+        |> put_status(:created)
+        |> render("show.json", user: user)
+      {:error, changeset} ->
+        conn
+        |> put_status(:unprocessable_entity)
+        |> render(Core.ChangesetView, "error.json", changeset: changeset)
     end
   end
 

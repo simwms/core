@@ -19,4 +19,12 @@ defmodule Core.UserTest do
     changeset = User.changeset(%User{}, @invalid_attrs)
     refute changeset.valid?
   end
+
+  test "no two users should have the same email" do
+    user = %User{} |> User.changeset(@valid_attrs) |> Repo.insert!
+    {:error, changeset} = %User{} |> User.changeset(@valid_attrs) |> Repo.insert
+    
+    refute changeset.valid?
+    assert changeset.errors == [email: "has already been taken"]
+  end
 end

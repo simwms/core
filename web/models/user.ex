@@ -27,10 +27,10 @@ defmodule Core.User do
     params = params |> process_params
     model 
     |> cast(params, @required_fields, @optional_fields)
-    |> downcase_email
     |> validate_format(:email, ~r/@/)
-    |> unique_constraint(:email, on: Core.Repo, downcase: true)
-    |> unique_constraint(:username, on: Core.Repo, downcase: true)
+    |> update_change(:email, &String.downcase/1)
+    |> unique_constraint(:email)
+    |> unique_constraint(:username)
   end
 
   def process_params(%{"password" => _}=params) do
@@ -46,14 +46,6 @@ defmodule Core.User do
     end
   end
   def process_params(p), do: p
-
-  defp downcase_email(changeset) do
-    if email = changeset |> get_field(:email) do
-      changeset |> put_change(:email, String.downcase(email))
-    else
-      changeset
-    end
-  end
 
   def synchronize_stripe(user) do
     case user.stripe_customer_id do

@@ -36,7 +36,7 @@ defmodule Core.AccountSynchronizer do
   def synchronized?(_), do: false
 
   def amazon!(account), do: account |> Core.AmazonSynchronizer.synchronize
-  def amazon?(%{access_key_id: aid, secret_access_key: sak}=account) when is_binary(aid) and is_binary(sak) do
+  def amazon?(%{access_key_id: aid, secret_access_key: sak}) when is_binary(aid) and is_binary(sak) do
     true
   end
   def amazon?(_), do: false
@@ -50,7 +50,7 @@ defmodule Core.AccountSynchronizer do
   end
 
   def simwms!(account), do: account |> Core.SimwmsSynchronizer.synchronize
-  def simwms?(%{simwms_account_key: sak}=account) when is_binary(sak) do
+  def simwms?(%{simwms_account_key: sak}) when is_binary(sak) do
     true
   end
   def simwms?(_), do: false

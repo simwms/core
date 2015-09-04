@@ -16,15 +16,15 @@ defmodule Core.UserControllerTest do
 
   test "creates and renders resource when data is valid", %{conn: conn} do
     conn = post conn, user_path(conn, :create), user: @valid_attrs 
-    id = json_response(conn, 200)["user"]["id"]
+    id = json_response(conn, 201)["user"]["id"]
     assert id
 
     user = Repo.get!(User, id)
     assert user
     assert user.password_hash
     assert user.username == @valid_attrs[:username]
-    assert json_response(conn, 200)["user"]["email"] == @valid_attrs[:email]
-    assert json_response(conn, 200)["user"]["username"] == @valid_attrs[:username]
+    assert json_response(conn, 201)["user"]["email"] == @valid_attrs[:email]
+    assert json_response(conn, 201)["user"]["username"] == @valid_attrs[:username]
   end
 
   test "does not create resource and renders errors when data is invalid", %{conn: conn} do
