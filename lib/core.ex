@@ -5,6 +5,10 @@ defmodule Core do
   # for more information on OTP Applications
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
+    
+    # Starts httpoisons
+    Stripex.start
+    Simwms.start
 
     children = [
       # Start the endpoint when the application starts
