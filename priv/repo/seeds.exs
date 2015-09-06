@@ -13,14 +13,14 @@ defmodule Seeds do
   def plant do
     user = seed_user
     [stage_account, local_account] = user |> seed_accounts
-    [plan|_] = seed_plans
+    [plan|_] = seed_service_plans
     %{account: stage_account, plan: plan} |> seed_payment_subscription
     %{account: local_account, plan: plan} |> seed_payment_subscription
   end
 
   @seed_user %{
-      "email" => "test@test.test",
-      "username" => "stage-test",
+      "email" => "seed-test-x13@test.co",
+      "username" => "seed test",
       "password" => "1234567" }
   defp seed_user do
     %Core.User{}
@@ -50,7 +50,7 @@ defmodule Seeds do
   ]
   defp seed_accounts(user) do
     @seed_accounts
-    |> Enum.map(&seed_account/1)
+    |> Enum.map(&seed_account(user, &1))
   end
   defp seed_account(user, seed) do
     user
