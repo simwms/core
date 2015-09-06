@@ -19,7 +19,7 @@ defmodule Core.Mixfile do
     [mod: {Core, []},
      applications: [:phoenix, :phoenix_html, :cowboy, :logger,
                     :phoenix_ecto, :postgrex, :comeonin, :fox,
-                    :cors_plug, :stripex]]
+                    :cors_plug, :stripex, :gateway]]
   end
 
   # Specifies which paths to compile per environment
