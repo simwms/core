@@ -34,10 +34,17 @@ defmodule Core.AccountController do
     end
   end
 
-  def show(conn, %{"id" => id, "force" => "sync"}) do
+  def show(conn, %{"id" => id, "force" => what}) do
     account = Repo.get!(Account, id) 
-    |> Core.AccountSynchronizer.synchronize!
-    |> Repo.preload(AccountQuery.preload_fields)
+
+    account = case what do
+      "sync" -> account |> Core.AccountSynchronizer.synchronize!
+      "simwms" -> account |> Core.SimwmsSynchronizer.synchronize
+      "stripe" -> account |> Core.StripeSynchronizer.synchronize
+      "amazon" -> account |> Core.AmazonSynchronizer.synchronize
+      _ -> account
+    end
+    account = account |> Repo.preload(AccountQuery.preload_fields)
     render conn, "show.json", account: account
   end
 
