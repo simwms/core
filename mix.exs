@@ -42,6 +42,6 @@ defmodule Core.Mixfile do
      {:cors_plug, "~> 0.1.3"},
      {:stripex, "~>0.1"},
      {:pipe, "~> 0.0.2"},
-     {:gateway, "~>0.0.4"}]
+     {:gateway, "~>0.0.5"}]
   end
 end

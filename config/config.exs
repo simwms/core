@@ -19,9 +19,12 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
+# url: "https://evening-springs-7575.herokuapp.com",
+# master_key: "koudou ga yamu made soba ni iru nante tagaeru yakusoku ha sezu tada anata to itai",
+# master_key: "zutto-yume-miteta-doko-made",
 config :gateway, Simwms,
   url: "http://localhost:4000",
-  master_key: "koudou ga yamu made soba ni iru nante tagaeru yakusoku ha sezu tada anata to itai",
+  master_key: System.get_env("SIMWMS_MASTER_KEY"),
   uiux_host: "https://simwms.github.io/uiux",
   config_host: "https://simwms.github.io/config",
   namespace: "apiv3"

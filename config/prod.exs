@@ -57,7 +57,7 @@ config :core, Core.Repo,
   pool_size: 20 # The amount of database connections in the pool
 
 config :gateway, Simwms,
-  url: "http://evening-springs-7575.herokuapp.com/",
+  url: "https://evening-springs-7575.herokuapp.com",
   master_key: System.get_env("SIMWMS_MASTER_KEY"),
   uiux_host: "https://simwms.github.io/uiux",
   config_host: "https://simwms.github.io/config",
