@@ -34,6 +34,13 @@ defmodule Core.AccountController do
     end
   end
 
+  def show(conn, %{"id" => id, "force" => "sync"}) do
+    account = Repo.get!(Account, id) 
+    |> Core.AccountSynchronizer.synchronize!
+    |> Repo.preload(AccountQuery.preload_fields)
+    render conn, "show.json", account: account
+  end
+
   def show(conn, %{"id" => id}) do
     account = Repo.get!(Account, id) |> Repo.preload(AccountQuery.preload_fields)
     render conn, "show.json", account: account
