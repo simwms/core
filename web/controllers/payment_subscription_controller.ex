@@ -23,6 +23,7 @@ defmodule Core.PaymentSubscriptionController do
     changeset = PaymentSubscription.changeset(subscription, params)
     source = params["source"]
     if changeset.valid? do
+      subscription |> queue_sync_job!
       subscription = changeset
       |> Repo.update!
       |> Repo.preload([:service_plan, account: :user])
@@ -37,9 +38,14 @@ defmodule Core.PaymentSubscriptionController do
 
   defp reset_to_free_trial!(subscription) do
     params = %{ service_plan_id: ServicePlan.free_trial.id }
+    subscription |> queue_sync_job!
     subscription
     |> PaymentSubscription.changeset(params)
     |> Repo.update!
     |> Repo.preload([:service_plan, account: :user])
+  end
+
+  defp queue_sync_job!(subscription) do
+    subscription |> assoc(:account) |> Repo.get! |> Accver.synchronize(:simwms)
   end
 end

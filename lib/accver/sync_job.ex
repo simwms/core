@@ -1,4 +1,10 @@
 defmodule Accver.SyncJob do
+
+  def update(%{id: id}) do
+    Core.Account
+    |> Core.Repo.get!(id)
+    |> Core.SimwmsSynchronizer.synchronize
+  end
   
   def sync(%{id: id}) do
     Core.Account

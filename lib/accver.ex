@@ -5,6 +5,10 @@ defmodule Accver do
   the fields in an account model.
   """
 
+  def synchronize(account, :simwms) do
+    Accver.JobSupervisor.start_job(account, :simwms)
+  end
+
   def synchronize(account) do
     Accver.JobSupervisor.start_job(account)
   end

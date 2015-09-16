@@ -7,6 +7,10 @@ defmodule Accver.JobSupervisor do
     Task.Supervisor.start_link(opts)
   end
 
+  def start_job(account, :simwms) do
+    __MODULE__ |> Task.Supervisor.start_child(SyncJob, :update, [account])
+  end
+
   def start_job(account) do
     __MODULE__ |> Task.Supervisor.start_child(SyncJob, :sync, [account])
   end

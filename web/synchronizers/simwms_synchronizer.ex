@@ -2,11 +2,16 @@ defmodule Core.SimwmsSynchronizer do
   alias Core.Account
   alias Core.Repo
 
+  def synchronize(%{simwms_account_key: id}=account) when is_binary(id) do
+    params = account |> generate_params!
+    {:ok, _} = id |> Simwms.Accounts.update(params)
+    account
+  end
+
   def synchronize(account) do
     {:ok, simwms_account} = account |> generate_params! |> Simwms.Accounts.create
     simwms_account |> generate_changeset(account) |> Repo.update!
   end
-
 
   defp generate_changeset(%{permalink: permalink}, local_account) do
     changes = %{simwms_account_key: permalink}
